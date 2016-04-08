@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Airport Pre-Alpha</string>
+    <string name="search_title">Search</string>
+
+    <string name="menu_item_notification">Push</string>
+
+    <string name="view_navigation_open">Open</string>
+    <string name="view_navigation_close">Close</string>
+
+    <string name="welcome_txt">Airport Pre-Alpha</string>
+    <string name="email">Email Address</string>
+    <string name="login">Login</string>
+    <string name="defaultmsg"></string>
+    <string name="msg_title">Message</string>
+    <string name="user_title"></string>
+
+
+    <string name="hint_password">Password</string>
+    <string name="hint_email">Email</string>
+    <string name="err_msg_name">Enter valid password</string>
+    <string name="err_msg_email">Enter valid email address</string>
+    <string name="title_activity_chat_room_discussion">ChatRoomDiscussionActivity</string>
+    <string name="action_logout">Logout</string>
+
+
+
+    <string name="mb_button">Button</string>
+
+
+    <!--<string name="tab_item_staff">Staff</string>-->
+    <!--<string name="tab_item_crew">Flight crew</string>-->
+    <!--<string name="tab_item_flight">Flights</string>-->
+    <!--<string name="tab_item_notification">Notification</string>-->
+
+</resources>
