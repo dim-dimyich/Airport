@@ -1,10 +1,10 @@
 package com.qoobico.remindme.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
-import android.support.annotation.IntegerRes;
+
 import android.support.annotation.Nullable;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,11 +17,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.dd.morphingbutton.MorphingButton;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.activity.MainActivity;
 import com.qoobico.remindme.adapter.FlightCrewAdapter;
@@ -36,18 +37,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final int LAYOUT = R.layout.crew_layout;
     private View view;
-    private String TAG = MainActivity.class.getSimpleName();
+    private String TAG = "cucle";
 
     private String crewId;
+    private String UserId = MyApplication.getInstance().getPrefManager().getUser().getId();
+    FloatingActionButton call;
 
-    private int mMorphCounter1 = 1;
-    private int mMorphCounter2 = 1;
-
+    String Readiness;
+    private String Ok = "1";
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private ArrayList<User> FlightCrewArrayList;
@@ -55,11 +59,12 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private RecyclerView recyclerView;
     private TextView nameCrew, dataCreate;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
-
+        Log.d(TAG, "onCreateView");
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_crews);
         nameCrew = (TextView) view.findViewById(R.id.number_crew);
         dataCreate = (TextView) view.findViewById(R.id.date_create_crew);
@@ -79,32 +84,14 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         ));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-
-        final MorphingButton btnMorph1 = (MorphingButton) view.findViewById(R.id.btnMorph1);
-        btnMorph1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onMorphButton1Clicked(btnMorph1);
-            }
-        });
-        final MorphingButton btnMorph2 = (MorphingButton) view.findViewById(R.id.btnMorph2);
-        btnMorph2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onMorphButton2Clicked(btnMorph2);
-            }
-        });
-
-        morphToSquare(btnMorph1, 0);
-        morphToSquare(btnMorph2, 0);
-
+        call = (FloatingActionButton) view.findViewById(R.id.clickon);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        Log.d(TAG, "onActivityCreated");
         swipeRefreshLayout.setOnRefreshListener(this);
 
         swipeRefreshLayout.post(new Runnable() {
@@ -112,16 +99,127 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public void run() {
                 swipeRefreshLayout.setRefreshing(true);
 
-                fetchFlightCrew();
+                fetchFlightCrew(Readiness);
+
+
+                call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String endPoint = EndPoints.READINESS.replace("_ID_", UserId);
+                        Log.e(TAG, "endPoint: " + endPoint);
+                        StringRequest strRead = new StringRequest(Request.Method.PUT,
+                                endPoint, new Response.Listener<String>() {
+
+                            @Override
+                            public void onResponse(String response) {
+                                Log.e(TAG, "response: " + response);
+
+                                try {
+                                    JSONObject obj = new JSONObject(response);
+
+                                    // check for error flag
+                                    if (obj.getBoolean("error") == false) {
+
+                                    } else {
+                                        // login error - simply toast the message
+                                        Toast.makeText(getContext(), "" + obj.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
+                                    }
+
+                                } catch (JSONException e) {
+                                    Log.e(TAG, "json parsing error: " + e.getMessage());
+                                    Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                NetworkResponse networkResponse = error.networkResponse;
+                                Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
+                                Toast.makeText(getContext(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }) {
+
+                            @Override
+                            protected Map<String, String> getParams() {
+                                Log.d(TAG, "Отправка данных");
+                                Map<String, String> params = new HashMap<>();
+                                params.put("readiness", Ok);
+
+                                Log.e(TAG, "params: " + params.toString());
+                                return params;
+                            }
+                        };
+
+                        //Adding request to request queue
+                        MyApplication.getInstance().addToRequestQueue(strRead);
+                        call.setVisibility(View.INVISIBLE);
+                    }
+
+
+                });
+
 
             }
         });
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
 
-    private void fetchFlightCrew() {
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "onDetach");
+    }
+
+    private void initFloating(){
+
+       if(Readiness!=null) {
+           if (Readiness.equals(Ok)) {
+               call.setVisibility(View.INVISIBLE);
+           } else {
+               call.setVisibility(View.VISIBLE);
+           }
+       }
+   }
+
+    private String fetchFlightCrew(String Readeness) {
         swipeRefreshLayout.setRefreshing(true);
         crewId = MyApplication.getInstance().getPrefManager().getUser().getCodeId();
         String endPoint = EndPoints.CREW.replace("_ID_", crewId);
@@ -147,7 +245,8 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         fl.setId(commentId);
                         fl.setCodeValue(commentText);
                         fl.setCreate(commentcreate);
-
+                        nameCrew.setText(fl.getCodeValue());
+                        dataCreate.setText("Назначена "+fl.getCreate());
                         JSONArray UsersArray = obju.getJSONArray("user");
                         for (int i = 0; i < UsersArray.length(); i++) {
                             JSONObject UsersObj = (JSONObject) UsersArray.get(i);
@@ -157,7 +256,11 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             us.setEmail(UsersObj.getString("email"));
                             us.setImageUser(UsersObj.getString("user_image"));
                             us.setPosition(UsersObj.getString("position_name"));
-                            //us.setFlightcrew(fl);
+                            us.setReadiness(UsersObj.getString("readiness"));
+                            if(us.getId().equals(UserId)){
+                                Readiness = (us.getReadiness());
+
+                               }
                             FlightCrewArrayList.add(us);
                         }
 
@@ -174,7 +277,8 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 mAdapter.notifyDataSetChanged();
 
                 swipeRefreshLayout.setRefreshing(false);
-
+                Log.d(TAG, "initFloating");
+                initFloating();
                 // subscribing to all chat room topics
 
             }
@@ -189,81 +293,13 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         //Adding request to request queue
         MyApplication.getInstance().addToRequestQueue(strReq);
+        return Readiness;
     }
-
 
     @Override
     public void onRefresh() {
         FlightCrewArrayList.clear();
-        fetchFlightCrew();
-    }
-
-    private void onMorphButton1Clicked(final MorphingButton btnMorph) {
-        if (mMorphCounter1 == 0) {
-            mMorphCounter1++;
-            morphToSquare(btnMorph, integer(R.integer.mb_animation));
-        } else if (mMorphCounter1 == 1) {
-            mMorphCounter1 = 0;
-            morphToSuccess(btnMorph);
-        }
-    }
-
-    private void onMorphButton2Clicked(final MorphingButton btnMorph) {
-        if (mMorphCounter2 == 0) {
-            mMorphCounter2++;
-            morphToSquare(btnMorph, integer(R.integer.mb_animation));
-        } else if (mMorphCounter2 == 1) {
-            mMorphCounter2 = 0;
-            morphToFailure(btnMorph,  integer(R.integer.mb_animation));
-        }
-    }
-
-    private void morphToSquare(final MorphingButton btnMorph, int duration) {
-        MorphingButton.Params square = MorphingButton.Params.create()
-                .duration(duration)
-                .cornerRadius(dimen(R.dimen.mb_corner_radius_2))
-                .width(dimen(R.dimen.mb_width_200))
-                .height(dimen(R.dimen.mb_height_56))
-                .color(color(R.color.mb_blue))
-                .colorPressed(color(R.color.mb_blue_dark))
-                .text(getString(R.string.mb_button));
-        btnMorph.morph(square);
-    }
-
-    private void morphToSuccess(final MorphingButton btnMorph) {
-        MorphingButton.Params circle = MorphingButton.Params.create()
-                .duration(integer(R.integer.mb_animation))
-                .cornerRadius(dimen(R.dimen.mb_height_56))
-                .width(dimen(R.dimen.mb_height_56))
-                .height(dimen(R.dimen.mb_height_56))
-                .color(color(R.color.mb_green))
-                .colorPressed(color(R.color.mb_green_dark))
-                .icon(R.drawable.done1);
-        btnMorph.morph(circle);
-    }
-
-    private void morphToFailure(final MorphingButton btnMorph, int duration) {
-        MorphingButton.Params circle = MorphingButton.Params.create()
-                .duration(duration)
-                .cornerRadius(dimen(R.dimen.mb_height_56))
-                .width(dimen(R.dimen.mb_height_56))
-                .height(dimen(R.dimen.mb_height_56))
-                .color(color(R.color.mb_red))
-                .colorPressed(color(R.color.mb_red_dark))
-                .icon(R.drawable.cancel);
-        btnMorph.morph(circle);
-    }
-
-    public int dimen(@DimenRes int resId) {
-        return (int) getResources().getDimension(resId);
-    }
-
-    public int color(@ColorRes int resId) {
-        return getResources().getColor(resId);
-    }
-
-    public int integer(@IntegerRes int resId) {
-        return getResources().getInteger(resId);
+        fetchFlightCrew(Readiness);
     }
 
 }

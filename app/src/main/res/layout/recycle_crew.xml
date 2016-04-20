@@ -16,31 +16,31 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="14dp"
             >
 
-            <com.android.volley.toolbox.NetworkImageView
+            <com.qoobico.remindme.util.CircularNetworkImageView
+                android:id="@+id/crew_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/crew_photo"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp"
                 />
 
             <TextView
+                android:id="@+id/crew_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/crew_name"
                 android:layout_toRightOf="@+id/crew_photo"
                 android:layout_alignParentTop="true"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 />
 
             <TextView
+                android:id="@+id/crew_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/crew_position"
                 android:layout_toRightOf="@+id/crew_photo"
                 android:layout_below="@+id/crew_name"
                 />

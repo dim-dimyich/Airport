@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.activity.MainActivity;
+import com.qoobico.remindme.adapter.FlightsAdapter;
 import com.qoobico.remindme.adapter.NewsAdapter;
 import com.qoobico.remindme.app.EndPoints;
 import com.qoobico.remindme.app.MyApplication;
@@ -30,6 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Winner on 28.02.2016.
@@ -60,15 +64,15 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 R.color.material_blue_700);
 
         NewsArrayList = new ArrayList<>();
-        mAdapter = new NewsAdapter(getActivity(),NewsArrayList);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new NewsAdapter(getActivity(), NewsArrayList);
+        LinearLayoutManager layoutManagerNews = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManagerNews);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(
                 getContext()
         ));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(false);
 
         return view;
     }
@@ -88,6 +92,19 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         });
 
+        recyclerView.addOnItemTouchListener(new NewsAdapter.NewsRecyclerTouchListener(getContext(), recyclerView, new NewsAdapter.NewsClickListener() {
+
+
+            @Override
+            public void onClick(View view, int position) {
+                Toast.makeText(getContext(), "Позиция news"+ position , Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
     }
 
@@ -133,7 +150,11 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     Log.e(TAG, "json parsing error: " + e.getMessage());
                     Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-
+                Collections.sort(NewsArrayList, new Comparator<News>(){
+                    public int compare(News e1, News e2) {
+                        return e2.getId().compareToIgnoreCase(e1.getId());
+                    }
+                });
                 mAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }

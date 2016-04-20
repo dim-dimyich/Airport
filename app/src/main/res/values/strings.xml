@@ -4,6 +4,21 @@
 
     <string name="menu_item_notification">Push</string>
 
+
+
+    <string name="crew_date">Назначена</string>
+
+
+
+
+    <string name="position_detail_staff">Должность</string>
+    <string name="email_detail_staff">Email</string>
+    <string name="telephone_detail_staff">Телефон</string>
+    <string name="jobs_detail_staff">Работает с</string>
+    <string name="date_birthday_detail_staff">Дата рождения</string>
+
+
+
     <string name="view_navigation_open">Open</string>
     <string name="view_navigation_close">Close</string>
 

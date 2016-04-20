@@ -1,6 +1,7 @@
 package com.qoobico.remindme.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Created by Winner on 28.03.2016.

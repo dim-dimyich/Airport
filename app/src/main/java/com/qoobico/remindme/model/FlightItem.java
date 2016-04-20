@@ -1,9 +1,11 @@
 package com.qoobico.remindme.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Winner on 30.11.2015.
  */
-public class FlightItem {
+public class FlightItem implements Serializable {
     String id, flight_number, flight_status, from_flight, to_flight, departure_datatime, arrival_datatime, flight_time, image;
 
     FlightCrew crew;

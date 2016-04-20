@@ -24,12 +24,15 @@ import com.qoobico.remindme.app.EndPoints;
 import com.qoobico.remindme.app.MyApplication;
 import com.qoobico.remindme.helper.SimpleDividerItemDecoration;
 import com.qoobico.remindme.model.FlightItem;
+import com.qoobico.remindme.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -39,7 +42,7 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private String TAG = MainActivity.class.getSimpleName();
     private String crewId;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ArrayList<FlightItem> CardArrayList;
+    private ArrayList<FlightItem> FlightArrayList;
     private FlightsAdapter mAdapter;
     private RecyclerView recyclerView;
 
@@ -57,8 +60,8 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 R.color.material_blue_500,
                 R.color.material_blue_700);
 
-        CardArrayList = new ArrayList<>();
-        mAdapter = new FlightsAdapter(getActivity(), CardArrayList);
+        FlightArrayList = new ArrayList<>();
+        mAdapter = new FlightsAdapter(getActivity(), FlightArrayList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(
@@ -135,7 +138,7 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 item.setArTime(CardObj.getString("arrival_datatime"));
                                 item.setFlightTime(CardObj.getString("flight_time"));
 
-                                CardArrayList.add(item);
+                                FlightArrayList.add(item);
                         }
 
                     } else {
@@ -147,7 +150,11 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     Log.e(TAG, "json parsing error: " + e.getMessage());
                     Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-              //  CardArrayList.sort
+                Collections.sort(FlightArrayList, new Comparator<FlightItem>(){
+                    public int compare(FlightItem em1, FlightItem em2) {
+                        return em1.getNumber().compareToIgnoreCase(em2.getNumber());
+                    }
+                });
                 mAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -167,7 +174,7 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
-        CardArrayList.clear();
+        FlightArrayList.clear();
         fetchFlightItem();
     }
 }

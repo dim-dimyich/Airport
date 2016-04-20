@@ -14,6 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.app.MyApplication;
 import com.qoobico.remindme.model.FlightItem;
+import com.qoobico.remindme.util.CircularNetworkImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,72 +22,87 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Winner on 30.11.2015.
  */
-public class FlightsAdapter extends RecyclerView.Adapter<FlightsAdapter.ViewHolder> {
+public class FlightsAdapter extends android.support.v7.widget.RecyclerView.Adapter {
 
     private Context Context;
-    private ArrayList<FlightItem> CardArrayList;
-    private NetworkImageView thumbNail;
-    public TextView flightStatus;
-    public TextView flightTo;
-    public TextView flightFrom;
-    public TextView dateTo;
-    public TextView dateFrom;
+    private ArrayList<FlightItem> FlightsArrayList;
 
     private static String today;
 
-
     ImageLoader imageLoader = MyApplication.getInstance().getImageLoader();
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
+
+        @Bind(R.id.flight_status)
+        TextView flightStatus;
+
+        @Bind(R.id.flight_to)
+        TextView flightTo;
+
+        @Bind(R.id.flight_from)
+        TextView flightFrom;
+
+        @Bind(R.id.date_to)
+        TextView dateTo;
+
+        @Bind(R.id.date_from)
+        TextView dateFrom;
+
+        @Bind(R.id.flight_image)
+        NetworkImageView thumbNail;
+
 
         public ViewHolder(View view) {
             super(view);
-            imageLoader = MyApplication.getInstance().getImageLoader();
-            thumbNail = (NetworkImageView) itemView
-                    .findViewById(R.id.flight_image);
-            flightStatus = (TextView) itemView.findViewById(R.id.flight_status);
-            flightTo = (TextView) itemView.findViewById(R.id.flight_to);
-            flightFrom = (TextView) itemView.findViewById(R.id.flight_from);
-            dateTo = (TextView) itemView.findViewById(R.id.date_to);
-            dateFrom = (TextView) itemView.findViewById(R.id.date_from);
+            ButterKnife.bind(this, view);
 
+        }
+        public void bindViewHolder(FlightItem flightItem) {
+
+            thumbNail.setImageUrl(flightItem.getImage(), imageLoader);
+
+            flightStatus.setText(flightItem.getStatus());
+            flightTo.setText(flightItem.getToFlight());
+            flightFrom.setText(flightItem.getFromFlight());
+            dateTo.setText(getTimeStamp(flightItem.getDepTime()));
+            dateFrom.setText(getTimeStamp(flightItem.getArTime()));
         }
 
     }
-
-    public FlightsAdapter(Context Context, ArrayList<FlightItem> CardArrayList) {
+    //---------------------------------------------------
+    public FlightsAdapter(Context Context, ArrayList<FlightItem> FlightsArrayList) {
         this.Context = Context;
-        this.CardArrayList = CardArrayList;
+        this.FlightsArrayList = FlightsArrayList;
 
         Calendar calendar = Calendar.getInstance();
         today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View FlightView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycle_flight, parent, false);
-
-        return new ViewHolder(itemView);
+        return new ViewHolder(FlightView);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-
-        FlightItem flightItem = CardArrayList.get(position);
-
-        thumbNail.setImageUrl(flightItem.getImage(), imageLoader);
-
-        flightStatus.setText(flightItem.getStatus());
-        flightTo.setText(flightItem.getToFlight());
-        flightFrom.setText(flightItem.getFromFlight());
-        dateTo.setText(getTimeStamp(flightItem.getDepTime()));
-        dateFrom.setText(getTimeStamp(flightItem.getArTime()));
-
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        FlightItem flightItem = FlightsArrayList.get(position);
+        ((ViewHolder) holder).bindViewHolder(flightItem);
     }
+
+    @Override
+    public int getItemCount() {
+        return FlightsArrayList.size();
+    }
+
 
     public interface FlightClickListener {
         void onClick(View view, int position);
@@ -137,10 +153,6 @@ public class FlightsAdapter extends RecyclerView.Adapter<FlightsAdapter.ViewHold
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return CardArrayList.size();
-    }
     public static String getTimeStamp(String dateStr) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timestamp = "";
@@ -159,7 +171,6 @@ public class FlightsAdapter extends RecyclerView.Adapter<FlightsAdapter.ViewHold
         }
 
         return timestamp;
-
 
     }
 }

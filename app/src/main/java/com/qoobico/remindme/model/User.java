@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Lincoln on 07/01/16.
  */
 public class User implements Serializable {
-    String id, name, email, password, phone, readiness, user_image, position, costperhour, code_id, image;
+    String id, name, email, password, phone, readiness, user_image, position, costperhour, code_id, image, create_acc, birthday;
     FlightCrew flightcrew;
 
     public User(){
@@ -22,13 +22,18 @@ public class User implements Serializable {
         this.costperhour = costperhour;
         this.code_id = code_id;
 
+
+
     }
-    public User(String name, String email, String position, String user_image, FlightCrew flightcrew) {
+    public User(String name, String email, String position, String user_image,  String readiness, FlightCrew flightcrew, String create_acc, String birthday) {
         this.name = name;
         this.email = email;
         this.position = position;
         this.user_image = user_image;
         this.flightcrew = flightcrew;
+        this.create_acc = create_acc;
+        this.birthday = birthday;
+        this.readiness = readiness;
     }
 
     public User(String id, String name, String email) {
@@ -116,6 +121,22 @@ public class User implements Serializable {
 
     public void setCodeId(String code_id) {
         this.code_id = code_id;
+    }
+
+    public String getCreate() {
+        return create_acc;
+    }
+
+    public void setCreate(String create_acc) {
+        this.create_acc = create_acc;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public FlightCrew getFlightcrew() {

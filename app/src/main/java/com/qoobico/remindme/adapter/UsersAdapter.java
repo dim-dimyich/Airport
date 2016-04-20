@@ -9,59 +9,74 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import com.qoobico.remindme.R;
+import com.qoobico.remindme.app.MyApplication;
 import com.qoobico.remindme.model.User;
+import com.qoobico.remindme.util.CircularNetworkImageView;
+
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Winner on 29.02.2016.
  */
-public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
+public class UsersAdapter extends android.support.v7.widget.RecyclerView.Adapter {
 
     private Context Context;
     private ArrayList<User> UsersArrayList;
 
+    ImageLoader StaffImage = MyApplication.getInstance().getImageLoader();
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView username, email;
+    public class ViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
+
+        @Bind(R.id.users_name)
+        TextView username;
+
+        @Bind(R.id.position)
+        TextView Position;
+
+        @Bind(R.id.staff_image)
+        CircularNetworkImageView StaffPfoto;
 
         public ViewHolder(View view) {
             super(view);
-            username = (TextView) view.findViewById(R.id.users_name);
-           // email = (TextView) view.findViewById(R.id.users_email);
-
+            ButterKnife.bind(this, view);
+        }
+        public void bindViewHolder(User user) {
+            username.setText(user.getName());
+            Position.setText(user.getPosition());
+            StaffPfoto.setImageUrl(user.getImageUser(), StaffImage);
         }
     }
-
+//-------------------------------------------------------------------------------------------------
 
     public UsersAdapter(Context Context, ArrayList<User> UsersArrayList) {
         this.Context = Context;
         this.UsersArrayList = UsersArrayList;
-
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.users_list_row, parent, false);
-
+                .inflate(R.layout.recycle_staff, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        User users = UsersArrayList.get(position);
-        holder.username.setText(users.getName());
-       // holder.email.setText(users.getEmail());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        User user = UsersArrayList.get(position);
+        ((ViewHolder) holder).bindViewHolder(user);
     }
 
     @Override
     public int getItemCount() {
         return UsersArrayList.size();
     }
-
-
 
     public interface UserClickListener {
         void onClick(View view, int position);

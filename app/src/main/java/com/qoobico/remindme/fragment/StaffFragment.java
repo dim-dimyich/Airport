@@ -26,6 +26,7 @@ import com.qoobico.remindme.adapter.UsersAdapter;
 import com.qoobico.remindme.app.EndPoints;
 import com.qoobico.remindme.app.MyApplication;
 import com.qoobico.remindme.helper.SimpleDividerItemDecoration;
+import com.qoobico.remindme.model.News;
 import com.qoobico.remindme.model.User;
 
 import org.json.JSONArray;
@@ -33,12 +34,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 
     private SwipeRefreshLayout swipeRefreshLayout;
-
 
     private static final int LAYOUT = R.layout.users_layout;
     private View view;
@@ -103,13 +105,13 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 // when chat is clicked, launch full chat thread activity
                 User user = UsersArrayList.get(position);
                 Intent intent = new Intent(getActivity(), ViewContactActivity.class);
-                intent.putExtra("user_id", user.getId());
                 intent.putExtra("name", user.getName());
                 intent.putExtra("email", user.getEmail());
                 intent.putExtra("phone", user.getPhone());
-//                intent.putExtra("user_image", user.getImage());
+                intent.putExtra("user_image", user.getImageUser());
                 intent.putExtra("position_name", user.getPosition());
-                intent.putExtra("cost_per_hour", user.getCost());
+                intent.putExtra("created_at", user.getCreate());
+                intent.putExtra("birthday", user.getBirthday());
                 startActivity(intent);
             }
 
@@ -151,8 +153,10 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             us.setName(UsersObj.getString("name"));
                             us.setEmail(UsersObj.getString("email"));
                             us.setPhone(UsersObj.getString("phone"));
-//                            us.setImage(UsersObj.getString("user_image"));
+                            us.setImageUser(UsersObj.getString("user_image"));
                             us.setPosition(UsersObj.getString("position_name"));
+                            us.setCreate(UsersObj.getString("created_at"));
+                            us.setBirthday(UsersObj.getString("birthday"));
                                 UsersArrayList.add(us);
                         }
 
@@ -166,6 +170,11 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     Log.e(TAG, "json parsing error: " + e.getMessage());
                     Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
+                Collections.sort(UsersArrayList, new Comparator<User>(){
+                    public int compare(User emp1, User emp2) {
+                        return emp1.getName().compareToIgnoreCase(emp2.getName());
+                    }
+                });
                 swipeRefreshLayout.setRefreshing(false);
                 uAdapter.notifyDataSetChanged();
 

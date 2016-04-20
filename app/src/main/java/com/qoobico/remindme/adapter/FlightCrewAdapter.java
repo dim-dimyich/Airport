@@ -13,6 +13,7 @@ import com.qoobico.remindme.R;
 import com.qoobico.remindme.app.MyApplication;
 import com.qoobico.remindme.model.FlightCrew;
 import com.qoobico.remindme.model.User;
+import com.qoobico.remindme.util.CircularNetworkImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,20 +29,20 @@ public class FlightCrewAdapter extends RecyclerView.Adapter<FlightCrewAdapter.Vi
     private Context Context;
     private ArrayList<User> CrewArrayList;
     private ArrayList<FlightCrew> FlightCrewInfoArrayList;
-    private NetworkImageView crewPfoto;
+    private CircularNetworkImageView crewPfoto;
 
     ImageLoader imageLoaderCrew = MyApplication.getInstance().getImageLoader();
-
+    private TextView userCrew, positioN, dataCreate;
     private static String today;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView userCrew, positioN, dataCreate;
+
 
 
         public ViewHolder(View view) {
             super(view);
             imageLoaderCrew = MyApplication.getInstance().getImageLoader();
-            crewPfoto = (NetworkImageView) itemView
+            crewPfoto = (CircularNetworkImageView) itemView
                     .findViewById(R.id.crew_photo);
             userCrew = (TextView) view.findViewById(R.id.crew_name);
             positioN = (TextView) view.findViewById(R.id.crew_position);
@@ -82,8 +83,9 @@ public class FlightCrewAdapter extends RecyclerView.Adapter<FlightCrewAdapter.Vi
 
         User flightcrew = CrewArrayList.get(position);
         crewPfoto.setImageUrl(flightcrew.getImageUser(), imageLoaderCrew);
-        holder.userCrew.setText(flightcrew.getName());
-        holder.positioN.setText(flightcrew.getPosition());
+        userCrew.setText(flightcrew.getName());
+        positioN.setText(flightcrew.getPosition());
+        positioN.setText(flightcrew.getPosition());
 
     }
 

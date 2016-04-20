@@ -14,6 +14,7 @@ public class EndPoints {
     public static final String USERS = BASE_URL + "/user";
     public static final String CREW = BASE_URL + "/flights_crew/_ID_";
     public static final String FLIGHTS = BASE_URL + "/flights/_ID_";
+    public static final String READINESS = BASE_URL + "/readiness/_ID_";
     public static final String CHAT_ROOMS = BASE_URL + "/chat_rooms";
     public static final String NEWS = BASE_URL + "/news";
     public static final String ANAL = BASE_URL + "/flights_hour/_ID_";
