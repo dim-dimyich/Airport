@@ -1,41 +1,34 @@
 <resources>
-    <string name="app_name">Airport Pre-Alpha</string>
-    <string name="search_title">Search</string>
+    <string name="app_name">Airport Beta</string>
+    <string name="search_title">Поиск</string>
 
     <string name="menu_item_notification">Push</string>
 
-
-
+<!--Подробно о персонале-->
     <string name="crew_date">Назначена</string>
-
-
-
-
     <string name="position_detail_staff">Должность</string>
     <string name="email_detail_staff">Email</string>
     <string name="telephone_detail_staff">Телефон</string>
     <string name="jobs_detail_staff">Работает с</string>
     <string name="date_birthday_detail_staff">Дата рождения</string>
 
-
-
     <string name="view_navigation_open">Open</string>
     <string name="view_navigation_close">Close</string>
 
-    <string name="welcome_txt">Airport Pre-Alpha</string>
-    <string name="email">Email Address</string>
-    <string name="login">Login</string>
+    <string name="welcome_txt">Airport Beta</string>
+    <string name="email">Email Адрес</string>
+    <string name="login">Войти</string>
     <string name="defaultmsg"></string>
-    <string name="msg_title">Message</string>
+    <string name="msg_title">Сообщение</string>
     <string name="user_title"></string>
 
-
-    <string name="hint_password">Password</string>
+<!--Логин активити-->
+    <string name="hint_password">Пароль</string>
     <string name="hint_email">Email</string>
-    <string name="err_msg_name">Enter valid password</string>
-    <string name="err_msg_email">Enter valid email address</string>
+    <string name="err_msg_name">Введите пароль</string>
+    <string name="err_msg_email">Введите email</string>
     <string name="title_activity_chat_room_discussion">ChatRoomDiscussionActivity</string>
-    <string name="action_logout">Logout</string>
+    <string name="action_logout">Выйти</string>
 
 
 

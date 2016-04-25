@@ -53,29 +53,29 @@ public class MyPreferenceManager {
         editor.putString(KEY_USER_NAME, user.getName());
         editor.putString(KEY_USER_EMAIL, user.getEmail());
         editor.putString(KEY_USER_PHONE, user.getPhone());
-//        editor.putString(KEY_USER_IMAGE, user.getPhoto());
         editor.putString(KEY_USER_POSITION, user.getPosition());
+        editor.putString(KEY_USER_IMAGE, user.getImageUser());
         editor.putString(KEY_USER_COST_PER, user.getCost());
         editor.putString(KEY_USER_CODE_ID, user.getCodeId());
 
         editor.commit();
 
-        Log.e(TAG, "User is stored in shared preferences. " + user.getName() + ", " + user.getEmail());
+        Log.e(TAG, "Пользователь сохранен. " + user.getName() + ", " + user.getEmail() + ", " + user.getPhone() + ", " + user.getPosition() + ", " + user.getImageUser());
     }
 
     public User getUser() {
         if (pref.getString(KEY_USER_ID, null) != null) {
-            String id, name, email, phone, image, position, cost, codeId;
+            String id, name, email, phone, user_image, position, cost, codeId;
             id = pref.getString(KEY_USER_ID, null);
             name = pref.getString(KEY_USER_NAME, null);
             email = pref.getString(KEY_USER_EMAIL, null);
             phone = pref.getString(KEY_USER_PHONE, null);
-            image = pref.getString(KEY_USER_IMAGE, null);
             position = pref.getString(KEY_USER_POSITION, null);
+            user_image = pref.getString(KEY_USER_IMAGE, null);
             cost = pref.getString(KEY_USER_COST_PER, null);
             codeId = pref.getString(KEY_USER_CODE_ID, null);
 
-            User user = new User(id, name, email, phone, image, position, cost, codeId);
+            User user = new User(id, name, email, phone, position, user_image, cost, codeId);
             return user;
         }
         return null;

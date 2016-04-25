@@ -1,75 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
-    android:background="?attr/colorPrimaryDark"
+    android:layout_height="190dp"
+    android:background="@drawable/esignlueky"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
     android:gravity="bottom">
 
+    <com.qoobico.remindme.util.CircularNetworkImageView
+        android:id="@+id/user_nav_photo"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingBottom="10dp"
+        android:paddingTop="20dp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/user_nav"
+        android:id="@+id/user_nav_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/user_nav_photo"
+        android:textColor="@color/mb_white"
+        android:paddingBottom="5dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_nav_email"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/user_nav_name"
+        android:textColor="@color/mb_white"
+        android:paddingBottom="5dp"/>
 
-       />
-
-</LinearLayout>
 
 
-
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="190dp"-->
-    <!--android:background="@drawable/header_image_navigation"-->
-    <!--android:orientation="vertical"-->
-    <!--&gt;-->
-
-    <!--&lt;!&ndash;<de.hdodenhof.circleimageview.CircleImageView&ndash;&gt;-->
-        <!--&lt;!&ndash;xmlns:app="http://schemas.android.com/apk/res-auto"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:id="@+id/profile_image"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="70dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="70dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:src="@drawable/profile"&ndash;&gt;-->
-        <!--&lt;!&ndash;app:border_color="#FF000000"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_marginLeft="24dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_centerVertical="true"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_alignParentLeft="true"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_alignParentStart="true"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_marginStart="24dp" />&ndash;&gt;-->
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textSize="14sp"-->
-        <!--android:textColor="#FFF"-->
-        <!--android:textStyle="bold"-->
-        <!--android:gravity="left"-->
-        <!--android:paddingBottom="4dp"-->
-        <!--android:id="@+id/navigation_username"-->
-        <!--android:layout_above="@+id/email"-->
-        <!--android:layout_alignLeft="@+id/email"-->
-        <!--android:layout_alignStart="@+id/email" />-->
-        <!--&lt;!&ndash;android:layout_alignLeft="@+id/profile_image"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_alignStart="@+id/profile_image" />&ndash;&gt;-->
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/navigation_email"-->
-        <!--android:gravity="left"-->
-        <!--android:textSize="14sp"-->
-        <!--android:textColor="#fff"-->
-        <!--android:layout_marginLeft="31dp"-->
-        <!--android:layout_marginStart="31dp"-->
-        <!--android:layout_marginBottom="22dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentStart="true" />-->
-
-<!--</RelativeLayout>-->
+</RelativeLayout>

@@ -1,6 +1,6 @@
 package com.qoobico.remindme.fragment;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -24,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.qoobico.remindme.R;
-import com.qoobico.remindme.activity.MainActivity;
 import com.qoobico.remindme.adapter.FlightCrewAdapter;
 import com.qoobico.remindme.app.EndPoints;
 import com.qoobico.remindme.app.MyApplication;

@@ -11,7 +11,7 @@
     </style>
 <!--style linear card staff-->
     <style name="menu_labels_style">
-        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@color/white</item>
     </style>
 </resources>

@@ -61,10 +61,7 @@ public class ViewContactActivity extends AppCompatActivity implements View.OnCli
             }
         });
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null)
-        {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.inflateMenu(R.menu.menu);
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);

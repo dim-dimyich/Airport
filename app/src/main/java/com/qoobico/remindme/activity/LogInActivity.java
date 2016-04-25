@@ -126,8 +126,7 @@ public class LogInActivity extends AppCompatActivity {
                             us.setName(UsersObj.getString("name"));
                             us.setPhone(UsersObj.getString("phone"));
                             us.setEmail(UsersObj.getString("email"));
-                            us.setEmail(UsersObj.getString("flight_hour"));
-                            us.setPosition(UsersObj.getString("user_image"));
+                            us.setImageUser(UsersObj.getString("user_image"));
                             us.setPosition(UsersObj.getString("position_name"));
                             us.setCost(UsersObj.getString("cost_per_hour"));
                             us.setCodeId(UsersObj.getString("code_id"));

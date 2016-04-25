@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Lincoln on 07/01/16.
  */
 public class User implements Serializable {
-    String id, name, email, password, phone, readiness, user_image, position, costperhour, code_id, image, create_acc, birthday;
+    String id, name, email, password, phone, readiness, position, user_image,  costperhour, code_id,  create_acc, birthday;
     FlightCrew flightcrew;
 
     public User(){
@@ -93,10 +93,10 @@ public class User implements Serializable {
 
 
     public String getImageUser() {
-        return image;
+        return user_image;
     }
-    public void setImageUser(String image) {
-        this.image = image;
+    public void setImageUser(String user_image) {
+        this.user_image = user_image;
     }
 
     public String getPosition() {
