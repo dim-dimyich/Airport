@@ -126,7 +126,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(inboxStyle)
                 .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.drawable.ic_notification_small)
+                .setSmallIcon(R.drawable.flights)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message)
                 .setVibrate(new long[] { 100, 100, 100, 100, 100 })

@@ -1,5 +1,7 @@
 package com.qoobico.remindme.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,15 +22,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.adapter.TabsFragmentAdapter;
+import com.qoobico.remindme.app.Config;
 import com.qoobico.remindme.app.MyApplication;
+import com.qoobico.remindme.gcm.GcmIntentService;
+import com.qoobico.remindme.model.Message;
 import com.qoobico.remindme.util.CircularNetworkImageView;
 import com.qoobico.remindme.util.Constants;
 
 public class MainActivity extends AppCompatActivity   {
-
+    private String TAG = MainActivity.class.getSimpleName();
     private static final int LAYOUT = R.layout.activity_main;
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private String UserName = MyApplication.getInstance().getPrefManager().getUser().getName();
     private String UserEmail = MyApplication.getInstance().getPrefManager().getUser().getEmail();
@@ -49,6 +61,57 @@ public class MainActivity extends AppCompatActivity   {
         initNavigationView();
         initTabs();
         putDataHeader();
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    subscribeToGlobalTopic();
+
+                } else if (intent.getAction().equals(Config.SENT_TOKEN_TO_SERVER)) {
+                    // gcm registration id is stored in our server's MySQL
+                    Log.e(TAG, "GCM registration id is sent to our server");
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                }
+            }
+        };
+        if (checkPlayServices()) {
+            registerGCM();
+        }
+    }
+    private void registerGCM() {
+        Intent intent = new Intent(this, GcmIntentService.class);
+        intent.putExtra("key", "register");
+        startService(intent);
+    }
+    private void subscribeToGlobalTopic() {
+        Intent intent = new Intent(this, GcmIntentService.class);
+        intent.putExtra(GcmIntentService.KEY, GcmIntentService.SUBSCRIBE);
+        intent.putExtra(GcmIntentService.TOPIC, Config.TOPIC_GLOBAL);
+        startService(intent);
+    }
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported. Google Play Services not installed!");
+                Toast.makeText(getApplicationContext(), "This device is not supported. Google Play Services not installed!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     private void initToolbar() {

@@ -44,8 +44,8 @@ import java.util.ArrayList;
  * Created by Winner on 28.03.2016.
  */
 public class ChatRoomsActivity extends AppCompatActivity implements View.OnClickListener{
+
     private String TAG = ChatRoomsActivity.class.getSimpleName();
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private ArrayList<ChatRoom> chatRoomArrayList;
     private ChatRoomsAdapter mAdapter;
@@ -127,10 +127,8 @@ public class ChatRoomsActivity extends AppCompatActivity implements View.OnClick
          * Always check for google play services availability before
          * proceeding further with GCM
          * */
-        if (checkPlayServices()) {
-            registerGCM();
+
             fetchChatRooms();
-        }
     }
 
     /**
@@ -280,28 +278,28 @@ public class ChatRoomsActivity extends AppCompatActivity implements View.OnClick
     }
 
     // starting the service to register with GCM
-    private void registerGCM() {
-        Intent intent = new Intent(this, GcmIntentService.class);
-        intent.putExtra("key", "register");
-        startService(intent);
-    }
+//    private void registerGCM() {
+//        Intent intent = new Intent(this, GcmIntentService.class);
+//        intent.putExtra("key", "register");
+//        startService(intent);
+//    }
 
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                Log.i(TAG, "This device is not supported. Google Play Services not installed!");
-                Toast.makeText(getApplicationContext(), "This device is not supported. Google Play Services not installed!", Toast.LENGTH_LONG).show();
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
+//    private boolean checkPlayServices() {
+//        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+//        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+//        if (resultCode != ConnectionResult.SUCCESS) {
+//            if (apiAvailability.isUserResolvableError(resultCode)) {
+//                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+//                        .show();
+//            } else {
+//                Log.i(TAG, "This device is not supported. Google Play Services not installed!");
+//                Toast.makeText(getApplicationContext(), "This device is not supported. Google Play Services not installed!", Toast.LENGTH_LONG).show();
+//                finish();
+//            }
+//            return false;
+//        }
+//        return true;
+//    }
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
