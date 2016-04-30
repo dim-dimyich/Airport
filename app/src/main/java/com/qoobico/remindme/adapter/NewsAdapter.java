@@ -1,6 +1,6 @@
 package com.qoobico.remindme.adapter;
 
-import android.content.Context;
+
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -13,7 +13,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.app.MyApplication;
-import com.qoobico.remindme.model.FlightItem;
 import com.qoobico.remindme.model.News;
 
 import java.text.ParseException;
@@ -61,7 +60,7 @@ public class NewsAdapter extends android.support.v7.widget.RecyclerView.Adapter 
         public void bindViewHolder(News news) {
 
             newsImg.setImageUrl(news.getNews_image(), newsImage);
-            newsTitle.setText(news.getId());
+            newsTitle.setText(news.getNewsTitle());
             newsDescription.setText(news.getNewsDescription());
             createNews.setText(getTimeStamp(news.getCreateNews()));
         }

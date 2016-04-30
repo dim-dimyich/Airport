@@ -21,17 +21,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.adapter.TabsFragmentAdapter;
 import com.qoobico.remindme.app.Config;
+import com.qoobico.remindme.app.EndPoints;
 import com.qoobico.remindme.app.MyApplication;
 import com.qoobico.remindme.gcm.GcmIntentService;
+import com.qoobico.remindme.model.FlightItem;
 import com.qoobico.remindme.model.Message;
+import com.qoobico.remindme.model.User;
 import com.qoobico.remindme.util.CircularNetworkImageView;
 import com.qoobico.remindme.util.Constants;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity   {
     private String TAG = MainActivity.class.getSimpleName();
@@ -40,7 +54,7 @@ public class MainActivity extends AppCompatActivity   {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-
+    private String UserId = MyApplication.getInstance().getPrefManager().getUser().getId();
     private String UserName = MyApplication.getInstance().getPrefManager().getUser().getName();
     private String UserEmail = MyApplication.getInstance().getPrefManager().getUser().getEmail();
     private String UserImage = MyApplication.getInstance().getPrefManager().getUser().getImageUser();
@@ -56,6 +70,7 @@ public class MainActivity extends AppCompatActivity   {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppDefault);
         super.onCreate(savedInstanceState);
+        UserCode();
         setContentView(LAYOUT);
         initToolbar();
         initNavigationView();
@@ -82,6 +97,7 @@ public class MainActivity extends AppCompatActivity   {
                 }
             }
         };
+
         if (checkPlayServices()) {
             registerGCM();
         }
@@ -226,12 +242,60 @@ public class MainActivity extends AppCompatActivity   {
 
 
     private void putDataHeader() {
-
         drawerUser.setText(UserName);
         drawerEmail.setText(UserEmail);
         UserPfoto.setImageUrl(UserImage, imageLoader);
 
 
+    }
+
+    private void UserCode(){
+//        Внимание мега костыль
+        String codeIdDef = "0";
+        User us = new User();
+        us.setCodeId(codeIdDef);
+        MyApplication.getInstance().getPrefManager().storeCode(us);
+//        Конец мегакостыля
+        String endPoint = EndPoints.CODEID.replace("_ID_", UserId);
+        Log.e(TAG, "endPoint: " + endPoint);
+        StringRequest strReq = new StringRequest(Request.Method.GET,
+                endPoint, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, "response: " + response);
+                try {
+                    JSONObject obju = new JSONObject(response);
+
+                    // check for error flag
+                    if (obju.getBoolean("error") == false) {
+                        JSONArray CardArray = obju.getJSONArray("user_code");
+                        for (int i = 0; i < CardArray.length(); i++) {
+                            JSONObject CodeOb = (JSONObject) CardArray.get(i);
+                            User us = new User();
+                            us.setCodeId(CodeOb.getString("code_id"));
+
+                            MyApplication.getInstance().getPrefManager().storeCode(us);
+                        }
+
+                    } else {
+                        // error in fetching chat rooms
+                        Toast.makeText(getApplicationContext(), "" + obju.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "json parsing error: " + e.getMessage());
+                    Toast.makeText(getApplicationContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        MyApplication.getInstance().addToRequestQueue(strReq);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -26,7 +26,8 @@ public class MyPreferenceManager {
     int PRIVATE_MODE = 0;
 
     // Sharedpref file name
-    private static final String PREF_NAME = "airport_user";
+    private static final String PREF_NAME_USER = "airport_user";
+    private static final String PREF_NAME_CODE = "code_user";
 
     // All Shared Preferences Keys
     public static final String KEY_USER_ID = "user_id";
@@ -43,7 +44,7 @@ public class MyPreferenceManager {
     // Constructor
     public MyPreferenceManager(Context context) {
         this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        pref = _context.getSharedPreferences(PREF_NAME_USER, PRIVATE_MODE);
         editor = pref.edit();
     }
 
@@ -61,6 +62,26 @@ public class MyPreferenceManager {
         editor.commit();
 
         Log.e(TAG, "Пользователь сохранен. " + user.getName() + ", " + user.getEmail() + ", " + user.getPhone() + ", " + user.getPosition() + ", " + user.getImageUser());
+    }
+
+    public void storeCode(User user) {
+        editor.putString(KEY_USER_CODE_ID, user.getCodeId());
+
+        editor.commit();
+
+        Log.e(TAG, "Пользователь сохранен." + user.getCodeId());
+    }
+
+    public User getCodeUser() {
+        if (pref.getString(KEY_USER_CODE_ID, null) != null) {
+            String codeId;
+
+            codeId = pref.getString(KEY_USER_CODE_ID, null);
+
+            User user = new User(codeId);
+            return user;
+        }
+        return null;
     }
 
     public User getUser() {

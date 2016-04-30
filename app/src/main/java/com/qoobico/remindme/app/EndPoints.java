@@ -17,6 +17,7 @@ public class EndPoints {
     public static final String READINESS = BASE_URL + "/readiness/_ID_";
     public static final String CHAT_ROOMS = BASE_URL + "/chat_rooms";
     public static final String NEWS = BASE_URL + "/news";
+    public static final String CODEID = BASE_URL + "/user_code/_ID_";
     public static final String ANAL = BASE_URL + "/flights_hour/_ID_";
     public static final String ANALCOST = BASE_URL + "/hour_cost/_ID_";
     public static final String CHAT_THREAD = BASE_URL + "/chat_rooms/_ID_";

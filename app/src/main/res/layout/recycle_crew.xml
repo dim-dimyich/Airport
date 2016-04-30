@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="14dp"
+            android:padding="12dp"
             >
 
             <com.qoobico.remindme.util.CircularNetworkImageView
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/crew_photo"
                 android:layout_alignParentTop="true"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 />
 
             <TextView

@@ -108,7 +108,7 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void fetchFlightItem() {
         swipeRefreshLayout.setRefreshing(true);
 
-        crewId = MyApplication.getInstance().getPrefManager().getUser().getCodeId();
+        crewId = MyApplication.getInstance().getPrefManager().getCodeUser().getCodeId();
         String endPoint = EndPoints.FLIGHTS.replace("_ID_", crewId);
         Log.e(TAG, "endPoint: " + endPoint);
         StringRequest strReq = new StringRequest(Request.Method.GET,

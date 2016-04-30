@@ -35,7 +35,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,15 +52,18 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private String crewId;
     private String UserId = MyApplication.getInstance().getPrefManager().getUser().getId();
     FloatingActionButton call;
-
+    private static String today;
     String Readiness;
     private String Ok = "1";
+    private String DataCreate = "Дата назначения ";
+    private String MassNull = "Вы не назначены в летную бригаду ";
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private ArrayList<User> FlightCrewArrayList;
     private FlightCrewAdapter mAdapter;
     private RecyclerView recyclerView;
     private TextView nameCrew, dataCreate;
+
 
 
     @Nullable
@@ -84,7 +91,13 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
         call = (FloatingActionButton) view.findViewById(R.id.clickon);
+        call.setVisibility(View.INVISIBLE);
+
+        Calendar calendar = Calendar.getInstance();
+        today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
         return view;
+
     }
 
     @Override
@@ -215,12 +228,12 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
            } else {
                call.setVisibility(View.VISIBLE);
            }
-       }
+       } else {call.setVisibility(View.INVISIBLE);}
    }
 
     private String fetchFlightCrew(String Readeness) {
         swipeRefreshLayout.setRefreshing(true);
-        crewId = MyApplication.getInstance().getPrefManager().getUser().getCodeId();
+        crewId = MyApplication.getInstance().getPrefManager().getCodeUser().getCodeId();
         String endPoint = EndPoints.CREW.replace("_ID_", crewId);
         Log.e(TAG, "endPoint: " + endPoint);
         StringRequest strReq = new StringRequest(Request.Method.GET,
@@ -245,7 +258,7 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         fl.setCodeValue(commentText);
                         fl.setCreate(commentcreate);
                         nameCrew.setText(fl.getCodeValue());
-                        dataCreate.setText("Назначена "+fl.getCreate());
+                        dataCreate.setText(DataCreate +getTimeStamp(fl.getCreate()));
                         JSONArray UsersArray = obju.getJSONArray("user");
                         for (int i = 0; i < UsersArray.length(); i++) {
                             JSONObject UsersObj = (JSONObject) UsersArray.get(i);
@@ -264,13 +277,13 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         }
 
                     } else {
-                        // error in fetching chat rooms
+
                         Toast.makeText(getContext(), "" + obju.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
-                    Log.e(TAG, "json parsing error: " + e.getMessage());
-                    Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                    nameCrew.setText(MassNull);
                 }
 
                 mAdapter.notifyDataSetChanged();
@@ -299,6 +312,27 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         FlightCrewArrayList.clear();
         fetchFlightCrew(Readiness);
+    }
+
+    public static String getTimeStamp(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestamp = "";
+
+        today = today.length() < 2 ? "0" + today : today;
+
+        try {
+            Date date = format.parse(dateStr);
+            SimpleDateFormat todayFormat = new SimpleDateFormat("dd");
+            String dateToday = todayFormat.format(date);
+            format = dateToday.equals(today) ? new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("dd LLL, hh:mm a");
+            String date1 = format.format(date);
+            timestamp = date1.toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return timestamp;
+
     }
 
 }
