@@ -39,26 +39,21 @@ import java.util.Comparator;
 
 public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private static final int LAYOUT = R.layout.users_layout;
     private View view;
     private String TAG = MainActivity.class.getSimpleName();
 
-
     private ArrayList<User> UsersArrayList;
     private UsersAdapter uAdapter;
     private RecyclerView UrecyclerView;
-
-
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
         UrecyclerView = (RecyclerView) view.findViewById(R.id.recycler_users);
-
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_user);
         swipeRefreshLayout.setColorSchemeResources(
@@ -77,11 +72,8 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         UrecyclerView.setItemAnimator(new DefaultItemAnimator());
         UrecyclerView.setAdapter(uAdapter);
 
-
         return view;
     }
-
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -105,6 +97,7 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 // when chat is clicked, launch full chat thread activity
                 User user = UsersArrayList.get(position);
                 Intent intent = new Intent(getActivity(), ViewContactActivity.class);
+                intent.putExtra("user_id", user.getId());
                 intent.putExtra("name", user.getName());
                 intent.putExtra("email", user.getEmail());
                 intent.putExtra("phone", user.getPhone());
@@ -120,7 +113,6 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             }
         }));
-
 
     }
 
@@ -168,7 +160,7 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                 } catch (JSONException e) {
                     Log.e(TAG, "json parsing error: " + e.getMessage());
-                    Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.no_data, Toast.LENGTH_LONG).show();
                 }
                 Collections.sort(UsersArrayList, new Comparator<User>(){
                     public int compare(User emp1, User emp2) {
@@ -187,7 +179,7 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void onErrorResponse(VolleyError error) {
                 NetworkResponse networkResponse = error.networkResponse;
                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
-                Toast.makeText(getContext(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
               swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -198,6 +190,11 @@ public class StaffFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
 
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // outState.putParcelableArrayList("mList", (ArrayList<? extends Parcelable>) NewsArrayList);
     }
 
 }

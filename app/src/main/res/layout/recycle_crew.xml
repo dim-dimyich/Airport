@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardCornerRadius="3dp"
+        card_view:cardElevation="4dp"
         android:id="@+id/card_crew"
         >
 
@@ -44,6 +45,16 @@
                 android:layout_toRightOf="@+id/crew_photo"
                 android:layout_below="@+id/crew_name"
                 />
+            <TextView android:id="@+id/intialization_crew"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:textSize="10dp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentRight="true"
+                android:text="Вы"
+                android:background="@drawable/bg_circle"/>
 
         </RelativeLayout>
 

@@ -9,25 +9,18 @@
     <android.support.v7.widget.CardView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="3dp"
         android:layout_marginTop="9dp"
         android:layout_marginLeft="9dp"
         android:layout_marginRight="9dp"
-        card_view:cardElevation="0.01dp"
-        android:layout_marginBottom="0dp">
+        android:layout_marginBottom="9dp"
+        card_view:cardCornerRadius="3dp"
+        card_view:cardElevation="4dp">
 
         <RelativeLayout
             android:id="@+id/top_layout"
             android:layout_width="fill_parent"
-            android:layout_height="300dp">
+            android:layout_height="wrap_content">
 
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/flight_image"
-                android:layout_width="400dp"
-                android:layout_height="250dp"
-                android:scaleType="fitXY"
-                android:layout_marginBottom="50dp"
-                android:layout_below="@+id/flight_status" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,41 +29,37 @@
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:textSize="20sp"
-                android:background="@color/material_light_blue_A200"
+
                 android:alpha="0.8"
-                android:textColor="#fff"
+
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"/>
             <TextView
                 android:id="@+id/flight_from"
-                android:layout_width="170dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:layout_gravity="bottom"
                 android:gravity="center"
-                android:background="@color/material_light_blue_A200"
-                android:alpha="0.8"
-                android:textColor="#fff"
-                android:textSize="26sp"
+                android:textSize="20sp"
                 android:text="Test"
-                android:layout_alignBottom="@+id/flight_image"
+                android:paddingBottom="8dp"
+                android:layout_below ="@+id/flight_status"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
             <TextView
                 android:id="@+id/flight_to"
-                android:layout_width="170dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:layout_gravity="bottom"
                 android:gravity="center"
-                android:background="@color/material_light_blue_A200"
-                android:alpha="0.8"
-                android:textColor="#fff"
-                android:textSize="26sp"
+                android:textSize="20sp"
                 android:text="Test"
-                android:layout_alignBottom="@+id/flight_image"
+                android:paddingBottom="8dp"
+                android:layout_below ="@+id/flight_status"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 
@@ -80,7 +69,29 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
                 android:id="@+id/date_to"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:layout_below ="@+id/airport_from"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/date_from"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="8dp"
+                android:paddingRight="8dp"
+                android:layout_below ="@+id/airport_to"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/airport_from"
+                android:layout_below="@+id/flight_from"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:paddingBottom="8dp"
@@ -91,14 +102,38 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
-                android:id="@+id/date_from"
-                android:layout_alignParentBottom="true"
+                android:id="@+id/airport_to"
+                android:layout_below="@+id/flight_to"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/flight_number"
+                android:layout_below="@+id/date_to"
+                android:gravity="center"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:paddingBottom="8dp"
-                android:paddingRight="8dp"/>
-
-
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+            <TextView
+                android:id="@+id/status_color_flight"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:textSize="10dp"
+                android:textColor="@android:color/white"
+                android:bottomLeftRadius="20dp"
+                android:bottomRightRadius="20dp"
+                android:topLeftRadius="20dp"
+                android:topRightRadius="20dp"
+                android:layout_alignBottom="@+id/flight_from"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

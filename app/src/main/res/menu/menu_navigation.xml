@@ -13,33 +13,28 @@
         android:id="@+id/actionNotificationItem"
         android:title="Летная бригада"
         android:icon="@drawable/crew1" />
-
         <item
             android:id="@+id/actionFlights"
-            android:title="Полеты"
+            android:title="Рейсы"
             android:icon="@drawable/flight" />
 
         <item
             android:id="@+id/actionnotification"
             android:title="Персонал"
             android:icon="@drawable/personel" />
-
 </group>
-    <item android:title="Связь">
+    <group android:checkableBehavior="single">
         <menu>
             <item android:id="@+id/nav_share" android:icon="@drawable/chat"
                 android:title="Чат" />
-            <item android:id="@+id/nav_send" android:icon="@drawable/send"
-                android:title="Отправить" />
         </menu>
-    </item>
-    <item android:title="Инструменты">
+    </group>
+    <group android:checkableBehavior="single">
         <menu>
             <item android:id="@+id/tools"
                 android:icon="@drawable/tools"
                 android:title="Настройки" />
         </menu>
-    </item>
-
+    </group>
 
 </menu>

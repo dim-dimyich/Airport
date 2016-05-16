@@ -1,12 +1,12 @@
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_refresh_crew"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content">
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+<android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,10 +16,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="3dp"
-        android:background="#ffff">
+        >
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/inf"
+            android:background="#E2E2E2"
             android:padding="12dp"
             >
     <TextView
@@ -47,17 +49,43 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/crew_info"
         />
+
 </RelativeLayout>
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/clickon"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        app:layout_anchor="@id/crew_info"
-        app:layout_anchorGravity="bottom|right|end"
-        app:fab_addButtonColorNormal="@color/material_light_blue_A200"
-        app:fab_addButtonColorPressed="@color/white"
-        android:src="@drawable/ok_crew"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"/>
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/clickon"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:layout_anchor="@id/crew_info"
+            app:layout_anchorGravity="bottom|right|end"
+            app:fab_addButtonColorNormal="@color/white"
+            app:fab_addButtonColorPressed="@color/material_grey_500"
+            app:fab_addButtonPlusIconColor="@color/material_grey_500"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            app:fab_expandDirection="down"
+            >
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/ok_readness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ok_crew"
+                app:fab_colorNormal="@color/material_green_300"
+                app:fab_colorPressed="@color/bg_bubble_self"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/cancel_readness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cancelmusic"
+            app:fab_colorNormal="@color/material_red_300"
+            app:fab_colorPressed="@color/bg_bubble_self"
+            app:fab_title="Click to remove"/>
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    <ProgressBar
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:id="@+id/pb_load"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 </android.support.design.widget.CoordinatorLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>

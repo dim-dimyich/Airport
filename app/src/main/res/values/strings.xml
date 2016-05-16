@@ -1,5 +1,8 @@
 <resources>
+    <!--Activity title-->
     <string name="app_name">Airport Beta</string>
+    <string name="analytics">Аналитика</string>
+    <string name="tools">Настройки</string>
     <string name="search_title">Поиск</string>
 
     <string name="menu_item_notification">Push</string>
@@ -30,14 +33,24 @@
     <string name="title_activity_chat_room_discussion">ChatRoomDiscussionActivity</string>
     <string name="action_logout">Выйти</string>
 
+    <!--Сообщения об ошибках-->
+    <string name="no_data">Нет данных</string>
+    <string name="no_network">Нет доступа к сети интернет</string>
+    <string name="error_login_password">Не верный логин или пароль</string>
 
 
-    <string name="mb_button">Button</string>
-
-
+    <!--Настройки-->
+    <string name="profile">Профиль</string>
+    <string name="notification">Уведомления</string>
+    <string name="lang">Языки</string>
+    <string name="about">О программе</string>
     <!--<string name="tab_item_staff">Staff</string>-->
     <!--<string name="tab_item_crew">Flight crew</string>-->
     <!--<string name="tab_item_flight">Flights</string>-->
     <!--<string name="tab_item_notification">Notification</string>-->
+    <string name="alertTitle">Заявка Диспетчеру</string>
+    <string name="alertMessege">Опишите свою проблему</string>
+    <string name="alertOk">Отправить</string>
+    <string name="alertCancel">Отмена</string>
 
 </resources>

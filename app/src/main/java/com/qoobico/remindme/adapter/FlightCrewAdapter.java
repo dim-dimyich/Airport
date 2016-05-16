@@ -28,16 +28,13 @@ public class FlightCrewAdapter extends RecyclerView.Adapter<FlightCrewAdapter.Vi
 
     private Context Context;
     private ArrayList<User> CrewArrayList;
-    private ArrayList<FlightCrew> FlightCrewInfoArrayList;
     private CircularNetworkImageView crewPfoto;
-
+    private String UserId = MyApplication.getInstance().getPrefManager().getUser().getId();
     ImageLoader imageLoaderCrew = MyApplication.getInstance().getImageLoader();
-    private TextView userCrew, positioN, dataCreate;
+    private TextView userCrew, positioN, initial;
     private static String today;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-
 
         public ViewHolder(View view) {
             super(view);
@@ -46,14 +43,10 @@ public class FlightCrewAdapter extends RecyclerView.Adapter<FlightCrewAdapter.Vi
                     .findViewById(R.id.crew_photo);
             userCrew = (TextView) view.findViewById(R.id.crew_name);
             positioN = (TextView) view.findViewById(R.id.crew_position);
-            dataCreate = (TextView) view.findViewById(R.id.date_create_crew);
-
-
-
+            initial = (TextView) view.findViewById(R.id.intialization_crew);
 
         }
     }
-
 
     public FlightCrewAdapter(Context Context, ArrayList<User> CrewArrayList) {
         this.Context = Context;
@@ -61,9 +54,7 @@ public class FlightCrewAdapter extends RecyclerView.Adapter<FlightCrewAdapter.Vi
         Calendar calendar = Calendar.getInstance();
         today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 
-
     }
-
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -85,7 +76,11 @@ public class FlightCrewAdapter extends RecyclerView.Adapter<FlightCrewAdapter.Vi
         crewPfoto.setImageUrl(flightcrew.getImageUser(), imageLoaderCrew);
         userCrew.setText(flightcrew.getName());
         positioN.setText(flightcrew.getPosition());
-        positioN.setText(flightcrew.getPosition());
+        if(flightcrew.getId().equals(UserId)){
+            initial.setVisibility(View.VISIBLE);
+        } else {
+            initial.setVisibility(View.GONE);
+        }
 
     }
 
@@ -94,25 +89,4 @@ public class FlightCrewAdapter extends RecyclerView.Adapter<FlightCrewAdapter.Vi
         return CrewArrayList.size();
     }
 
-    public static String getTimeStamp(String dateStr) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String timestamp = "";
-
-        today = today.length() < 2 ? "0" + today : today;
-
-        try {
-            Date date = format.parse(dateStr);
-            SimpleDateFormat todayFormat = new SimpleDateFormat("dd");
-            String dateToday = todayFormat.format(date);
-            format = dateToday.equals(today) ? new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("dd LLL, hh:mm a");
-            String date1 = format.format(date);
-            timestamp = date1.toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return timestamp;
-
-
-    }
 }

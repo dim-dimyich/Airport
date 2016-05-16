@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -45,6 +46,7 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ArrayList<FlightItem> FlightArrayList;
     private FlightsAdapter mAdapter;
     private RecyclerView recyclerView;
+    private String noFlight = "У Вас нет рейсов";
 
     @Nullable
     @Override
@@ -77,6 +79,7 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+//        final MainActivity mainActF = (MainActivity)getActivity();
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
@@ -84,7 +87,7 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void run() {
                 swipeRefreshLayout.setRefreshing(true);
-
+//                mainActF.UserCode();
                 fetchFlightItem();
             }
         });
@@ -127,14 +130,15 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             for (int i = 0; i < CardArray.length(); i++) {
                                 JSONObject CardObj = (JSONObject) CardArray.get(i);
                                 FlightItem item = new FlightItem();
-                                item.setId(CardObj.getString("flights_id"));
+                                item.setId(CardObj.getString("flight_id"));
                                 item.setNumber(CardObj.getString("flight_number"));
                                 item.setStatus(CardObj.getString("flight_status"));
                                 item.setFromFlight(CardObj.getString("from_flight"));
+                                item.setFromAirport(CardObj.getString("airport_from"));
                                 item.setToFlight(CardObj.getString("to_flight"));
+                                item.setToAirport(CardObj.getString("airport_to"));
                                 item.setDepTime(CardObj.getString("departure_datetime"));
-
-                                item.setImage(CardObj.getString("flight_image"));
+                               // item.setImage(CardObj.getString("flight_image"));
                                 item.setArTime(CardObj.getString("arrival_datatime"));
                                 item.setFlightTime(CardObj.getString("flight_time"));
 
@@ -143,16 +147,16 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
                     } else {
                         // error in fetching chat rooms
-                        Toast.makeText(getContext(), "" + obju.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "сюда" + obju.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
-                    Log.e(TAG, "json parsing error: " + e.getMessage());
-                    Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, e.getMessage());
+                    Toast.makeText(getContext(), R.string.no_data, Toast.LENGTH_LONG).show();
                 }
                 Collections.sort(FlightArrayList, new Comparator<FlightItem>(){
                     public int compare(FlightItem em1, FlightItem em2) {
-                        return em1.getNumber().compareToIgnoreCase(em2.getNumber());
+                        return em2.getDepTime().compareTo(em1.getDepTime());
                     }
                 });
                 mAdapter.notifyDataSetChanged();
@@ -162,6 +166,9 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
+                Toast.makeText(getContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -175,6 +182,14 @@ public class FlightsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh() {
         FlightArrayList.clear();
+//        MainActivity mainAct = (MainActivity)getActivity();
+//        mainAct.UserCode();
         fetchFlightItem();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // outState.putParcelableArrayList("mList", (ArrayList<? extends Parcelable>) NewsArrayList);
     }
 }

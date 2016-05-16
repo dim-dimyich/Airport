@@ -1,6 +1,7 @@
 package com.qoobico.remindme.fragment;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -148,7 +150,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                 } catch (JSONException e) {
                     Log.e(TAG, "json parsing error: " + e.getMessage());
-                    Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.no_data, Toast.LENGTH_LONG).show();
                 }
                 Collections.sort(NewsArrayList, new Comparator<News>(){
                     public int compare(News e1, News e2) {
@@ -162,6 +164,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
+                Toast.makeText(getContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -169,6 +174,12 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         //Adding request to request queue
         MyApplication.getInstance().addToRequestQueue(strReqNews);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+       // outState.putParcelableArrayList("mList", (ArrayList<? extends Parcelable>) NewsArrayList);
     }
 
 

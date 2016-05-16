@@ -44,5 +44,6 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.3'
     compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56'
     compile 'com.getbase:floatingactionbutton:1.10.1'
+   // compile 'com.github.ashishbhandari:AndroidTabbedDialog:1.0'
 
 }

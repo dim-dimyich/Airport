@@ -42,6 +42,14 @@
             android:configChanges="orientation|keyboardHidden">
         </activity>
         <activity
+            android:name=".activity.ToolsActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:configChanges="orientation|keyboardHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+        <activity
             android:name=".activity.ChatRoomsActivity"
             android:parentActivityName=".activity.MainActivity">
             <meta-data

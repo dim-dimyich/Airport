@@ -219,8 +219,8 @@ public class MainActivity extends AppCompatActivity   {
                         startActivity(anal);
                         break;
                     case R.id.tools:
-                        Toast.makeText(getApplicationContext(),
-                                "Инструменты находятся разработке", Toast.LENGTH_SHORT).show();
+                        Intent tools = new Intent(getApplicationContext(), ToolsActivity.class);
+                        startActivity(tools);
                         break;
 
                     case R.id.nav_share:
@@ -228,10 +228,6 @@ public class MainActivity extends AppCompatActivity   {
                         startActivity(goChat);
                         break;
 
-                    case R.id.nav_send:
-                        Toast.makeText(getApplicationContext(),
-                                "Отправить находится разработке", Toast.LENGTH_SHORT).show();
-                        break;
 
 
                 }
@@ -249,7 +245,7 @@ public class MainActivity extends AppCompatActivity   {
 
     }
 
-    private void UserCode(){
+    public void UserCode(){
 //        Внимание мега костыль
         String codeIdDef = "0";
         User us = new User();
@@ -279,13 +275,12 @@ public class MainActivity extends AppCompatActivity   {
                         }
 
                     } else {
-                        // error in fetching chat rooms
-                        Toast.makeText(getApplicationContext(), "" + obju.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.no_data, Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
                     Log.e(TAG, "json parsing error: " + e.getMessage());
-                    Toast.makeText(getApplicationContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.no_data, Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {

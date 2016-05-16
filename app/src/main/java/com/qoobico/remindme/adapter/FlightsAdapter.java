@@ -34,6 +34,9 @@ public class FlightsAdapter extends android.support.v7.widget.RecyclerView.Adapt
     private ArrayList<FlightItem> FlightsArrayList;
 
     private static String today;
+    private static String Red  = "Отменен";
+    private static String Green = "Выполнен";
+    private static String Yellow = "Ожидается";
 
     ImageLoader imageLoader = MyApplication.getInstance().getImageLoader();
 
@@ -54,8 +57,20 @@ public class FlightsAdapter extends android.support.v7.widget.RecyclerView.Adapt
         @Bind(R.id.date_from)
         TextView dateFrom;
 
-        @Bind(R.id.flight_image)
-        NetworkImageView thumbNail;
+//        @Bind(R.id.flight_image)
+//        NetworkImageView thumbNail;
+
+        @Bind(R.id.airport_from)
+        TextView airportFrom;
+
+        @Bind(R.id.airport_to)
+        TextView airportTo;
+
+        @Bind(R.id.status_color_flight)
+        TextView ColorStatus;
+
+        @Bind(R.id.flight_number)
+        TextView flightNumber;
 
 
         public ViewHolder(View view) {
@@ -65,13 +80,20 @@ public class FlightsAdapter extends android.support.v7.widget.RecyclerView.Adapt
         }
         public void bindViewHolder(FlightItem flightItem) {
 
-            thumbNail.setImageUrl(flightItem.getImage(), imageLoader);
+           // thumbNail.setImageUrl(flightItem.getImage(), imageLoader);
 
             flightStatus.setText(flightItem.getStatus());
             flightTo.setText(flightItem.getToFlight());
             flightFrom.setText(flightItem.getFromFlight());
-            dateTo.setText(getTimeStamp(flightItem.getDepTime()));
+            airportFrom.setText(flightItem.getFromAirport());
+            airportTo.setText(flightItem.getToAirport());
             dateFrom.setText(getTimeStamp(flightItem.getArTime()));
+            dateTo.setText(getTimeStamp(flightItem.getDepTime()));
+            flightNumber.setText(flightItem.getNumber());
+
+            if(flightItem.getStatus().equals(Red)){ColorStatus.setBackgroundResource(R.drawable.bg_flight_red);}
+            else if(flightItem.getStatus().equals(Green)){ColorStatus.setBackgroundResource(R.drawable.bg_flight_green);}
+            else if(flightItem.getStatus().equals(Yellow)){ColorStatus.setBackgroundResource(R.drawable.bg_flight_yelow);}
         }
 
     }

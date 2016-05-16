@@ -1,12 +1,16 @@
 package com.qoobico.remindme.fragment;
 
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +30,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.qoobico.remindme.R;
+import com.qoobico.remindme.activity.MainActivity;
+import com.qoobico.remindme.activity.ViewContactActivity;
 import com.qoobico.remindme.adapter.FlightCrewAdapter;
+import com.qoobico.remindme.adapter.UsersAdapter;
 import com.qoobico.remindme.app.EndPoints;
 import com.qoobico.remindme.app.MyApplication;
 import com.qoobico.remindme.helper.SimpleDividerItemDecoration;
@@ -44,19 +55,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
-
     private static final int LAYOUT = R.layout.crew_layout;
     private View view;
     private String TAG = "cucle";
-
     private String crewId;
     private String UserId = MyApplication.getInstance().getPrefManager().getUser().getId();
-    FloatingActionButton call;
+    FloatingActionsMenu ReadNessMenu;
+    FloatingActionButton ReadNessOk;
+    FloatingActionButton ReadNessCancel;
+
     private static String today;
     String Readiness;
     private String Ok = "1";
+    private String Canc = "3";
     private String DataCreate = "Дата назначения ";
-    private String MassNull = "Вы не назначены в летную бригаду ";
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private ArrayList<User> FlightCrewArrayList;
@@ -80,7 +92,6 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 R.color.material_blue_300,
                 R.color.material_blue_500,
                 R.color.material_blue_700);
-
         FlightCrewArrayList = new ArrayList<>();
         mAdapter = new FlightCrewAdapter(getActivity(), FlightCrewArrayList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -90,8 +101,11 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         ));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-        call = (FloatingActionButton) view.findViewById(R.id.clickon);
-        call.setVisibility(View.INVISIBLE);
+        ReadNessMenu = (FloatingActionsMenu) view.findViewById(R.id.clickon);
+        ReadNessOk = (FloatingActionButton) view.findViewById(R.id.ok_readness);
+        ReadNessCancel = (FloatingActionButton) view.findViewById(R.id.cancel_readness);
+        ReadNessMenu.setVisibility(View.INVISIBLE);
+
 
         Calendar calendar = Calendar.getInstance();
         today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
@@ -103,6 +117,7 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         Log.d(TAG, "onActivityCreated");
         swipeRefreshLayout.setOnRefreshListener(this);
 
@@ -113,8 +128,7 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                 fetchFlightCrew(Readiness);
 
-
-                call.setOnClickListener(new View.OnClickListener() {
+                ReadNessOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String endPoint = EndPoints.READINESS.replace("_ID_", UserId);
@@ -139,7 +153,7 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                                 } catch (JSONException e) {
                                     Log.e(TAG, "json parsing error: " + e.getMessage());
-                                    Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.no_data, Toast.LENGTH_LONG).show();
                                 }
                             }
                         }, new Response.ErrorListener() {
@@ -148,7 +162,7 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             public void onErrorResponse(VolleyError error) {
                                 NetworkResponse networkResponse = error.networkResponse;
                                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
-                                Toast.makeText(getContext(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
                             }
                         }) {
 
@@ -165,15 +179,199 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                         //Adding request to request queue
                         MyApplication.getInstance().addToRequestQueue(strRead);
-                        call.setVisibility(View.INVISIBLE);
+                        ReadNessOk.setVisibility(View.INVISIBLE);
                     }
 
 
                 });
 
+                ReadNessCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
+                        final EditText input = new EditText(getContext());
+                        a_builder.setMessage(R.string.alertMessege)
+                                .setCancelable(false)
+                                .setView(input)
+                                .setPositiveButton(R.string.alertOk,new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(getContext(), "Заявка отправлена ", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton(R.string.alertCancel,new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                }) ;
+                        AlertDialog alert = a_builder.create();
+                        alert.setTitle(R.string.alertTitle);
+                        alert.show();
+
+                    }
+                });
 
             }
         });
+
+        recyclerView.addOnItemTouchListener(new UsersAdapter.RecyclerTouchListener(getContext(), recyclerView, new UsersAdapter.UserClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                // when chat is clicked, launch full chat thread activity
+                User user = FlightCrewArrayList.get(position);
+                Intent intent = new Intent(getActivity(), ViewContactActivity.class);
+                intent.putExtra("user_id", user.getId());
+                intent.putExtra("name", user.getName());
+                intent.putExtra("email", user.getEmail());
+                intent.putExtra("phone", user.getPhone());
+                intent.putExtra("user_image", user.getImageUser());
+                intent.putExtra("position_name", user.getPosition());
+                intent.putExtra("created_at", user.getCreate());
+                intent.putExtra("birthday", user.getBirthday());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
+
+    }
+
+    private void initFloating(){
+        ReadNessMenu.setVisibility(View.VISIBLE);
+       if(Readiness!=null) {
+           if (Readiness.equals(Ok)) {
+               ReadNessCancel.setVisibility(View.VISIBLE);
+               ReadNessOk.setVisibility(View.INVISIBLE);
+           } else if(Readiness.equals(Canc)) {
+               ReadNessOk.setVisibility(View.VISIBLE);
+               ReadNessCancel.setVisibility(View.INVISIBLE);
+           }
+       } else { }
+   }
+
+    private String fetchFlightCrew(String Readeness) {
+        swipeRefreshLayout.setRefreshing(true);
+        crewId = MyApplication.getInstance().getPrefManager().getCodeUser().getCodeId();
+        String endPoint = EndPoints.CREW.replace("_ID_", crewId);
+        Log.e(TAG, "endPoint: " + endPoint);
+        StringRequest strReq = new StringRequest(Request.Method.GET,
+                endPoint, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, "response: " + response);
+
+                try {
+                    JSONObject obju = new JSONObject(response);
+
+                    // check for error flag
+                    if (obju.getBoolean("error") == false) {
+                        JSONObject crewObj = obju.getJSONObject("flight_crew");
+                        String commentId = crewObj.getString("code_id");
+                        String commentText = crewObj.getString("crew_name");
+                        String commentcreate = crewObj.getString("created_at");
+
+                        FlightCrew fl = new FlightCrew();
+                        fl.setId(commentId);
+                        fl.setCodeValue(commentText);
+                        fl.setCreate(commentcreate);
+                        nameCrew.setText(fl.getCodeValue());
+                        dataCreate.setText(DataCreate +getTimeStamp(fl.getCreate()));
+                        JSONArray UsersArray = obju.getJSONArray("user");
+                        for (int i = 0; i < UsersArray.length(); i++) {
+                            JSONObject UsersObj = (JSONObject) UsersArray.get(i);
+                            User us = new User();
+                            us.setId(UsersObj.getString("user_id"));
+                            us.setName(UsersObj.getString("name"));
+                            us.setEmail(UsersObj.getString("email"));
+                            us.setPhone(UsersObj.getString("phone"));
+                            us.setImageUser(UsersObj.getString("user_image"));
+                            us.setPosition(UsersObj.getString("position_name"));
+                            us.setReadiness(UsersObj.getString("readiness"));
+                            us.setCreate(UsersObj.getString("created_at"));
+                            us.setBirthday(UsersObj.getString("birthday"));
+//                            Проверяем готовность пользователя
+                            if(us.getId().equals(UserId)){
+                                Readiness = (us.getReadiness());
+
+                               }
+                            FlightCrewArrayList.add(us);
+                        }
+
+                        RelativeLayout cinfo = (RelativeLayout) view.findViewById(R.id.inf);
+                        cinfo.setBackgroundResource(R.color.white);
+
+                    } else {
+
+                        Toast.makeText(getContext(), "error правда" + obju.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    Toast.makeText(getContext(), R.string.no_data, Toast.LENGTH_LONG).show();
+
+                }
+
+                mAdapter.notifyDataSetChanged();
+
+                swipeRefreshLayout.setRefreshing(false);
+                Log.d(TAG, "initFloating");
+                initFloating();
+                // subscribing to all chat room topics
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
+                Toast.makeText(getContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        //Adding request to request queue
+        MyApplication.getInstance().addToRequestQueue(strReq);
+        return Readiness;
+    }
+
+    @Override
+    public void onRefresh() {
+        FlightCrewArrayList.clear();
+//        MainActivity mainAct = new MainActivity();
+//        mainAct.UserCode();
+        fetchFlightCrew(Readiness);
+    }
+
+    public static String getTimeStamp(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestamp = "";
+
+        today = today.length() < 2 ? "0" + today : today;
+
+        try {
+            Date date = format.parse(dateStr);
+            SimpleDateFormat todayFormat = new SimpleDateFormat("dd");
+            String dateToday = todayFormat.format(date);
+            format = dateToday.equals(today) ? new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("dd LLL, hh:mm a");
+            String date1 = format.format(date);
+            timestamp = date1.toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return timestamp;
+
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -218,121 +416,6 @@ public class CrewFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onDetach() {
         super.onDetach();
         Log.d(TAG, "onDetach");
-    }
-
-    private void initFloating(){
-
-       if(Readiness!=null) {
-           if (Readiness.equals(Ok)) {
-               call.setVisibility(View.INVISIBLE);
-           } else {
-               call.setVisibility(View.VISIBLE);
-           }
-       } else {call.setVisibility(View.INVISIBLE);}
-   }
-
-    private String fetchFlightCrew(String Readeness) {
-        swipeRefreshLayout.setRefreshing(true);
-        crewId = MyApplication.getInstance().getPrefManager().getCodeUser().getCodeId();
-        String endPoint = EndPoints.CREW.replace("_ID_", crewId);
-        Log.e(TAG, "endPoint: " + endPoint);
-        StringRequest strReq = new StringRequest(Request.Method.GET,
-                endPoint, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                Log.e(TAG, "response: " + response);
-
-                try {
-                    JSONObject obju = new JSONObject(response);
-
-                    // check for error flag
-                    if (obju.getBoolean("error") == false) {
-                        JSONObject crewObj = obju.getJSONObject("flight_crew");
-                        String commentId = crewObj.getString("code_id");
-                        String commentText = crewObj.getString("crew_name");
-                        String commentcreate = crewObj.getString("created_at");
-
-                        FlightCrew fl = new FlightCrew();
-                        fl.setId(commentId);
-                        fl.setCodeValue(commentText);
-                        fl.setCreate(commentcreate);
-                        nameCrew.setText(fl.getCodeValue());
-                        dataCreate.setText(DataCreate +getTimeStamp(fl.getCreate()));
-                        JSONArray UsersArray = obju.getJSONArray("user");
-                        for (int i = 0; i < UsersArray.length(); i++) {
-                            JSONObject UsersObj = (JSONObject) UsersArray.get(i);
-                            User us = new User();
-                            us.setId(UsersObj.getString("user_id"));
-                            us.setName(UsersObj.getString("name"));
-                            us.setEmail(UsersObj.getString("email"));
-                            us.setImageUser(UsersObj.getString("user_image"));
-                            us.setPosition(UsersObj.getString("position_name"));
-                            us.setReadiness(UsersObj.getString("readiness"));
-                            if(us.getId().equals(UserId)){
-                                Readiness = (us.getReadiness());
-
-                               }
-                            FlightCrewArrayList.add(us);
-                        }
-
-                    } else {
-
-                        Toast.makeText(getContext(), "" + obju.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (JSONException e) {
-
-                    nameCrew.setText(MassNull);
-                }
-
-                mAdapter.notifyDataSetChanged();
-
-                swipeRefreshLayout.setRefreshing(false);
-                Log.d(TAG, "initFloating");
-                initFloating();
-                // subscribing to all chat room topics
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-        //Adding request to request queue
-        MyApplication.getInstance().addToRequestQueue(strReq);
-        return Readiness;
-    }
-
-    @Override
-    public void onRefresh() {
-        FlightCrewArrayList.clear();
-        fetchFlightCrew(Readiness);
-    }
-
-    public static String getTimeStamp(String dateStr) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String timestamp = "";
-
-        today = today.length() < 2 ? "0" + today : today;
-
-        try {
-            Date date = format.parse(dateStr);
-            SimpleDateFormat todayFormat = new SimpleDateFormat("dd");
-            String dateToday = todayFormat.format(date);
-            format = dateToday.equals(today) ? new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("dd LLL, hh:mm a");
-            String date1 = format.format(date);
-            timestamp = date1.toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return timestamp;
-
     }
 
 }

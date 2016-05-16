@@ -2,13 +2,18 @@ package com.qoobico.remindme.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -33,7 +38,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.app.EndPoints;
 import com.qoobico.remindme.app.MyApplication;
-import com.qoobico.remindme.util.DemoBase;
 import com.qoobico.remindme.util.MyYAxisValueFormatter;
 
 import org.json.JSONArray;
@@ -45,14 +49,14 @@ import java.util.ArrayList;
 /**
  * Created by Winner on 30.03.2016.
  */
-public class AnalyticsActivity  extends DemoBase implements OnChartGestureListener {
+public class AnalyticsActivity  extends AppCompatActivity implements OnChartGestureListener {
 
     private String UserId;
     private ArrayList entries1;
     private ArrayList xVals;
     private PieChart mChart;
     private BarChart bChart;
-
+    private SwipeRefreshLayout swipeRefreshAnalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppDefault);
@@ -61,7 +65,7 @@ public class AnalyticsActivity  extends DemoBase implements OnChartGestureListen
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_awesomedesign);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
+        toolbar.setTitle(R.string.analytics);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -181,7 +185,7 @@ public class AnalyticsActivity  extends DemoBase implements OnChartGestureListen
                     }
 
                 } catch (JSONException e) {
-
+                    Toast.makeText(getApplicationContext(), R.string.no_data, Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -189,6 +193,8 @@ public class AnalyticsActivity  extends DemoBase implements OnChartGestureListen
 
             @Override
             public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
             }
         });
 

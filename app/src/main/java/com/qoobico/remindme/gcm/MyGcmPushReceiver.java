@@ -25,10 +25,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.qoobico.remindme.activity.AnalyticsActivity;
 import com.qoobico.remindme.activity.ChatRoomActivity;
 import com.qoobico.remindme.activity.MainActivity;
 import com.qoobico.remindme.app.Config;
 import com.qoobico.remindme.app.MyApplication;
+import com.qoobico.remindme.fragment.StaffFragment;
+import com.qoobico.remindme.model.Analitycs;
 import com.qoobico.remindme.model.Message;
 import com.qoobico.remindme.model.User;
 
@@ -137,7 +140,7 @@ public class MyGcmPushReceiver extends GcmListenerService {
                     notificationUtils.playNotificationSound();
                 } else {
 
-                    // app is in background. show the message in notification try
+                    // app is in background. show the message in notification try переход по клику на пуш
                     Intent resultIntent = new Intent(getApplicationContext(), ChatRoomActivity.class);
                     resultIntent.putExtra("chat_room_id", chatRoomId);
                     showNotificationMessage(getApplicationContext(), title, user.getName() + " : " + message.getMessage(), message.getCreatedAt(), resultIntent);
@@ -193,7 +196,7 @@ public class MyGcmPushReceiver extends GcmListenerService {
                     notificationUtils.playNotificationSound();
                 } else {
 
-                    // app is in background. show the message in notification try
+                    // app is in background. show the message in notification try переход по клику на пуш
                     Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
 
                     // check for push notification image attachment

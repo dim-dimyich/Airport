@@ -108,8 +108,7 @@ public class LogInActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-                pDialog.setMessage("Загрузка...");
-                pDialog.show();
+
                 Log.e(TAG, "response: " + response);
 
                 try {
@@ -119,6 +118,9 @@ public class LogInActivity extends AppCompatActivity {
                     if (obj.getBoolean("error") == false) {
                         // user successfully logged in
                         JSONArray UsersArray = obj.getJSONArray("user");
+
+                        pDialog.setMessage("Загрузка...");
+                        pDialog.show();
 
                             JSONObject UsersObj = (JSONObject) UsersArray.get(0);
                             User us = new User();
@@ -133,19 +135,18 @@ public class LogInActivity extends AppCompatActivity {
                             // storing user in shared preferences
                             MyApplication.getInstance().getPrefManager().storeUser(us);
 
-
                         // start main activity
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();
 
                     } else {
                         // login error - simply toast the message
-                        Toast.makeText(getApplicationContext(), "" + obj.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Else" + obj.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
-                    Log.e(TAG, "json parsing error: " + e.getMessage());
-                    Toast.makeText(getApplicationContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Catch json parsing error: " + e.getMessage());
+                    Toast.makeText(getApplicationContext(), "Неверный логин или пароль ", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -153,8 +154,8 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 NetworkResponse networkResponse = error.networkResponse;
-                Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
-                Toast.makeText(getApplicationContext(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Нет доступа к сети интернет " + error.getMessage() + ", code: " + networkResponse);
+                Toast.makeText(getApplicationContext(), "Нет доступа к сети интернет ", Toast.LENGTH_SHORT).show();
             }
         }) {
 

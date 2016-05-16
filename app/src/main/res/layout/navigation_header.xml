@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="190dp"
-    android:background="@drawable/esignlueky"
+    android:layout_height="wrap_content"
+    android:background="@drawable/header_image_navigation"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
@@ -35,7 +35,4 @@
         android:layout_below="@+id/user_nav_name"
         android:textColor="@color/mb_white"
         android:paddingBottom="5dp"/>
-
-
-
 </RelativeLayout>

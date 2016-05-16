@@ -29,7 +29,7 @@ public class UsersAdapter extends android.support.v7.widget.RecyclerView.Adapter
 
     private Context Context;
     private ArrayList<User> UsersArrayList;
-
+    private String UserId = MyApplication.getInstance().getPrefManager().getUser().getId();
     ImageLoader StaffImage = MyApplication.getInstance().getImageLoader();
 
     public class ViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
@@ -39,6 +39,9 @@ public class UsersAdapter extends android.support.v7.widget.RecyclerView.Adapter
 
         @Bind(R.id.position)
         TextView Position;
+
+        @Bind(R.id.intialization_user)
+        TextView initial;
 
         @Bind(R.id.staff_image)
         CircularNetworkImageView StaffPfoto;
@@ -51,6 +54,11 @@ public class UsersAdapter extends android.support.v7.widget.RecyclerView.Adapter
             username.setText(user.getName());
             Position.setText(user.getPosition());
             StaffPfoto.setImageUrl(user.getImageUser(), StaffImage);
+            if(user.getId().equals(UserId)){
+                initial.setVisibility(View.VISIBLE);
+            } else {
+                initial.setVisibility(View.GONE);
+            }
         }
     }
 //-------------------------------------------------------------------------------------------------

@@ -6,19 +6,21 @@ import java.io.Serializable;
  * Created by Winner on 30.11.2015.
  */
 public class FlightItem implements Serializable {
-    String id, flight_number, flight_status, from_flight, to_flight, departure_datatime, arrival_datatime, flight_time, image;
+    String id, flight_number, flight_status, from_flight, airport_from, to_flight, airport_to, departure_datatime, arrival_datatime, flight_time, image;
 
     FlightCrew crew;
     public FlightItem(){
 
     }
-    public FlightItem(String id, String flight_number, String flight_status,  String image, String from_flight, String to_flight, String departure_datatime, String arrival_datatime, String flight_time, FlightCrew crew){
+    public FlightItem(String id, String flight_number, String flight_status,  String image, String from_flight, String airport_from, String to_flight, String airport_to, String departure_datatime, String arrival_datatime, String flight_time, FlightCrew crew){
         this.id = id;
         this.image = image;
         this.flight_number = flight_number;
         this.flight_status = flight_status;
         this.from_flight = from_flight;
+        this.airport_from = airport_from;
         this.to_flight = to_flight;
+        this.airport_to = airport_to;
         this.departure_datatime = departure_datatime;
         this.arrival_datatime = arrival_datatime;
         this.flight_time = flight_time;
@@ -59,12 +61,28 @@ public class FlightItem implements Serializable {
         this.from_flight = from_flight;
     }
 
+    public String getFromAirport() {
+        return airport_from;
+    }
+
+    public void setFromAirport(String airport_from) {
+        this.airport_from = airport_from;
+    }
+
     public String getToFlight() {
         return to_flight;
     }
 
     public void setToFlight(String to_flight) {
         this.to_flight = to_flight;
+    }
+
+    public String getToAirport() {
+        return airport_to;
+    }
+
+    public void setToAirport(String airport_to) {
+        this.airport_to = airport_to;
     }
 
     public String getDepTime() {
